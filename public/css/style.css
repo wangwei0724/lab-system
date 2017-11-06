@@ -19,9 +19,20 @@ body{
 	z-index: 1;
 }
 #leftBar{
-	background: #fff;
-	position: absolute;
-	left: 50px;
-	top: 50px;
+	background: #071051;
+	position:fixed;
 	z-index: 2;
+}
+.chooseTopic{
+	display: inline-block;
+	width: 120px;
+	height: 40px;
+	padding-top: 10px;
+	font-size: 20px;
+	text-align: center;
+	vertical-align: middle;
+}
+.chooseTopic a{
+	text-decoration: none;
+	color: #fff;
 }
