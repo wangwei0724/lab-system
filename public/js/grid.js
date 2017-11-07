@@ -2,7 +2,7 @@ var grid = {
     db: {
         loadData: function(filter) {
                 return $.grep(this.attacks, function(data) {
-                    return (filter.sig_class_name=='all' || data.sig_class_name === filter.sig_class_name)
+                    return (filter.class=='all' || data.class === filter.class)
                 });
             }
         },
@@ -18,7 +18,6 @@ var grid = {
                     name: data.sig_type[i]
                 })
             }
-            console.log(self.db.sig_type)
             self.initGrid()
         },function(err) {
             self.db.attacks = []
@@ -45,9 +44,11 @@ var grid = {
 
             fields: [
                 { name: "cid", type: "text", title:'序号', width: 25, filtering:false},     
-                { name: "sig_class_name", type: "select", title:'攻击类型', items: db.sig_type, valueField: "name", textField: "name"},
+                { name: "class", type: "select", title:'攻击类型', items: db.sig_type, valueField: "name", textField: "name"},
+                { name: "ip_src", type: "text", title:'源ip地址', filtering:false, align: 'center'},
+                { name: "ip_dst", type: "text", title:'目的ip地址', filtering:false, align: 'center'},
                 { name: "sig_class_name", type: "text", title:'攻击详情', filtering:false, align: 'center'},
-                { name: "timestamp", type: "text", title:'时间', width: 40, filtering:false},
+                { name: "timestamp", type: "text", title:'时间', width: 80, filtering:false},
             ]
         });
     },
@@ -56,8 +57,11 @@ var grid = {
         return new Promise(function(resolve,reject){
             $.ajax({
                 url: '/lab-system/api/attack.php',
-                type: 'Get',
+                beforeSend: function(){
+                    $('.loadEffect').show();
+                },
                 success: function(data){
+                    $('.loadEffect').hide();
                     data = JSON.parse(data);
                     console.log(data)
                     if(data.status === 0){
@@ -67,6 +71,7 @@ var grid = {
                     }
                 },
                 error: function(){
+                    $('.loadEffect').hide();
                     reject(-1)
                 }
             })
