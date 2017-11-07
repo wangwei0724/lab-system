@@ -8,20 +8,13 @@ body{
 	margin: 0;
 	border: 0;
 	padding: 0;
-	background-color: rgba(51,51,51,1);
 	position: relative;
 }
-
 #mapContainer{
 	position: absolute;
 	width: 100%;
 	height:100%;
 	z-index: 1;
-}
-#leftBar{
-	background: #071051;
-	position:fixed;
-	z-index: 2;
 }
 .chooseTopic{
 	display: inline-block;
@@ -32,7 +25,41 @@ body{
 	text-align: center;
 	vertical-align: middle;
 }
-.chooseTopic a{
-	text-decoration: none;
-	color: #fff;
+#leftBar{
+	height: 60px;
+	position: sticky;
+	border-bottom: 1px solid #ebebeb;
 }
+
+.chooseTopic {
+	float: left;
+	height: 100%;
+	margin: 0 30px;
+}
+.chooseTopic a{
+	line-height: 60px;
+	text-decoration: none;
+	color: #262626;
+	font-size: 16px; 
+}
+.chooseTopic.logo a{
+	font-size: 20px;
+}
+
+#chartContainer{
+	width: 100%;
+	height: 500px;
+	padding: 80px 20px;
+	box-sizing:border-box;
+	-moz-box-sizing:border-box; /* Firefox */
+	-webkit-box-sizing:border-box; /* Safari */
+}
+#dayContainer{
+	width: 100%;
+	height: 400px;
+	padding: 0 20px 40px 20px;
+	box-sizing:border-box;
+	-moz-box-sizing:border-box; /* Firefox */
+	-webkit-box-sizing:border-box; /* Safari */
+}
+

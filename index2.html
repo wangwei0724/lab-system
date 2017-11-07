@@ -1,1 +1,142 @@
-图表
+<!DOCTYPE html>
+<html>
+<head>
+	<title>安全动态感知</title>
+	<meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="public/css/style.css">
+    <script src='public/js/jquery.min.js'></script>
+    <script src='public/js/echarts.min.js'></script>
+</head>
+<body>
+    <div id="leftBar">
+        <div class="chooseTopic" style="width: 200px">
+            <a href="index.html">安全动态感知系统</a>
+        </div>
+    	<div class="chooseTopic">
+    		<a href="index.html">总体态势</a>
+    	</div>
+    	<div class="chooseTopic">
+    		<a href="index1.html">数据列表</a>
+    	</div>
+    	<div class="chooseTopic">
+    		<a href="index2.html">图表</a>
+    	</div>
+    </div>
+    <div id="chartContainer"></div>
+    <div id="dayContainer"></div>
+    <div id="infoContainer"></div>
+    <script src="public/js/jquery.min.js"></script>
+    <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.4.0&key=84ad88afecbe1bf57015c4a7e28064ae"></script> 
+    <script src="public/js/echarts.min.js"></script>
+    <script type="text/javascript">
+	    $.ajax({
+	        url:'/lab-system/api/flow.php',
+	        dataType:'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+	        success:function(data){
+	        	data=data.data;
+ 				var xAxis_month=[];
+			    var yAxis_month=[];
+			    var xAxis_day=[];
+			    var yAxis_day=[]
+			    $.each(data.month,function(key,value){
+					xAxis_month.unshift(key);
+					yAxis_month.unshift(value);
+				});
+				$.each(data.day,function(key,value){
+					xAxis_day.unshift(key);
+					yAxis_day.unshift(value);
+				});
+		    	var option_month = {
+				    title : {
+				        text: '月流量监测'
+				    },
+				    tooltip : {
+				        trigger: 'axis'
+				    },
+				    toolbox: {
+				        show : true,
+				        feature : {
+				            mark : {show: true},
+				            dataView : {show: true, readOnly: false},
+				            magicType : {show: true, type: ['line', 'bar']},
+				            restore : {show: true},
+				            saveAsImage : {show: true}
+				        }
+				    },
+				    calculable : true,
+				    xAxis : [
+				        {
+				            type : 'category',
+				            boundaryGap : false,
+				            data : xAxis_month
+				        }
+				    ],
+				    yAxis : [
+				        {
+				            type : 'value',
+				            axisLabel : {
+				                formatter: '{value}'
+				            }
+				        }
+				    ],
+				    series : [
+				        {
+				            name:'流量监测',
+				            type:'line',
+				            data:yAxis_month
+				        }
+				    ]
+				};
+		    	var option_day = {
+				    title : {
+				        text: '日流量监测'
+				    },
+				    tooltip : {
+				        trigger: 'axis'
+				    },
+				    toolbox: {
+				        show : true,
+				        feature : {
+				            mark : {show: true},
+				            dataView : {show: true, readOnly: false},
+				            magicType : {show: true, type: ['line', 'bar']},
+				            restore : {show: true},
+				            saveAsImage : {show: true}
+				        }
+				    },
+				    calculable : true,
+				    xAxis : [
+				        {
+				            type : 'category',
+				            boundaryGap : false,
+				            data : xAxis_day
+				        }
+				    ],
+				    yAxis : [
+				        {
+				            type : 'value',
+				            axisLabel : {
+				                formatter: '{value}'
+				            }
+				        }
+				    ],
+				    series : [
+				        {
+				            name:'流量监测',
+				            type:'line',
+				            data:yAxis_day
+				        }
+				    ]
+				};
+				var monthChart = echarts.init(document.getElementById('chartContainer'));
+		        monthChart.setOption(option_month); 
+		        var dayChart = echarts.init(document.getElementById('dayContainer'));
+		        dayChart.setOption(option_day); 
+	        }     
+	    });
+        // var data={"month":{"2017-11-07":0,"2017-11-06":0,"2017-11-05":0,"2017-11-04":0,"2017-11-03":0,"2017-11-02":63,"2017-11-01":0,"2017-10-31":0,"2017-10-30":0,"2017-10-29":0,"2017-10-28":0,"2017-10-27":0,"2017-10-26":0,"2017-10-25":0,"2017-10-24":0,"2017-10-23":0,"2017-10-22":0,"2017-10-21":0,"2017-10-20":0,"2017-10-19":0,"2017-10-18":0,"2017-10-17":0,"2017-10-16":0,"2017-10-15":0,"2017-10-14":0,"2017-10-13":0,"2017-10-12":0,"2017-10-11":0,"2017-10-10":0,"2017-10-09":0,"2017-10-08":0},"day":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]}
+		
+	        	   
+    </script>
+</body>
+</html>
