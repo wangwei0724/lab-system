@@ -33,8 +33,15 @@
   <!--   <script src="http://gallery.echartsjs.com/dep/echarts/map/js/world.js"></script> 
     <script src="public/js/extension/bmap.js"></script> -->
    <script>
-     var myChart = echarts.init(document.getElementById('main'));  
-    option = {   
+    var myChart = echarts.init(document.getElementById('main')); 
+    option = { 
+        backgroundColor: '#080e38',
+        color: [ 
+            '#ff7f50', '#87cefa', '#da70d6', '#32cd32', '#6495ed', 
+            '#ff69b4', '#ba55d3', '#cd5c5c', '#ffa500', '#40e0d0', 
+            '#1e90ff', '#ff6347', '#7b68ee', '#00fa9a', '#ffd700', 
+            '#6b8e23', '#ff00ff', '#3cb371', '#b8860b', '#30e0e0' 
+        ],  
         tooltip : {
             //trigger: 'item',
             enterable:false,
@@ -68,35 +75,62 @@
                 name: 'pm2.5',
                 type: 'map',
                 mapType: 'world',
-                hoverable: false,
+                hoverable: true,
                 roam:true,
                 data : [],
-                markPoint : {
-                    symbolSize: 5,       // 标注大小，半宽（半径）参数，当图形为方向或菱形则总宽度为symbolSize * 2
-                    itemStyle: {
+                markLine : {
+                    smooth:true,
+                    symbol: ['none', 'circle'],  
+                    symbolSize : 1,
+                    effect : {
+                        show: true,
+                        scaleSize: 1,
+                        period: 30,
+                        color: '#fff',
+                        shadowBlur: 10
+                    },
+                    itemStyle : {
                         normal: {
-                            borderColor: '#87cefa',
-                            borderWidth: 1,            // 标注边线线宽，单位px，默认为1
-                            label: {
-                                show: false
-                            }
-                        },
-                        emphasis: {
-                            borderColor: '#1e90ff',
-                            borderWidth: 5,
-                            label: {
-                                show: false
+                            borderWidth:2,
+                            lineStyle: {
+                                type: 'solid',
+                                shadowBlur: 10
                             }
                         }
                     },
                     data : [
+                        [{name:'1'},{name:'2'}],
+                        [{name:'1'},{name:'3'}],
+                        [{name:'2'},{name:'3'}]
+                    ],
+                },
+                markPoint : {
+                        symbol:'emptyCircle',
+                        symbolSize : function (v){
+                            return 10 + v/10
+                        },
+                        effect : {
+                            show: true,
+                            shadowBlur : 0
+                        },
+                        itemStyle:{
+                            normal:{
+                                label:{show:false}
+                            },
+                            emphasis: {
+                                label:{position:'top'}
+                            }
+                        },
+                            data : [
                         {name:'1',type: "dos", time: '2017-11-01',from:'柏林',to:'上海'},
-                        {name:'2',type: "dos", time: '2017-11-01',from:'柏林',to:'上海'}
+                        {name:'2',type: "dos", time: '2017-11-01',from:'柏林',to:'上海'},
+                        {name:'3',type: "dos", time: '2017-11-01',from:'柏林',to:'上海'}
                     ]
                 },
                 geoCoord: {
-                    '1':[121.15,31.89],
-                    "2":[121.15,21.89]
+                    '1':[101.15,31.89],
+                    "2":[121.15,21.89],
+                    '3':[141.15,31.89]
                 }
             }
         ]
