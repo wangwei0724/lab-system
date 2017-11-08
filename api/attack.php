@@ -24,7 +24,7 @@ try{
 		$data[$key]['ip_src'] = long2ip($val['ip_src']);
 		$data[$key]['ip_dst'] = long2ip($val['ip_src']);		
 	}
-	$sig_type = array_unique(array_column($data, 'class'));
+	$sig_type = array_unique(array_column($data, 'sig_class_name'));
 
 	echo json_encode([
 		'status' => 0,

@@ -2,7 +2,7 @@ var grid = {
     db: {
         loadData: function(filter) {
                 return $.grep(this.attacks, function(data) {
-                    return (filter.class=='all' || data.class === filter.class)
+                    return (filter.sig_class_name=='all' || data.sig_class_name === filter.sig_class_name)
                 });
             }
         },
@@ -43,11 +43,12 @@ var grid = {
             pgSize: 15,
 
             fields: [
-                { name: "cid", type: "text", title:'序号', width: 25, filtering:false},     
-                { name: "class", type: "select", title:'攻击类型', items: db.sig_type, valueField: "name", textField: "name"},
+                { name: "cid", type: "text", title:'序号', width: 25, filtering:false},   
+                { name: "class", type: "text", title:'一级攻击类型', filtering:false, align: 'center'},  
+                { name: "sig_class_name", type: "select", title:'二级攻击类型', items: db.sig_type, valueField: "name", textField: "name"},
                 { name: "ip_src", type: "text", title:'源ip地址', filtering:false, align: 'center'},
                 { name: "ip_dst", type: "text", title:'目的ip地址', filtering:false, align: 'center'},
-                { name: "sig_class_name", type: "text", title:'攻击详情', filtering:false, align: 'center'},
+                
                 { name: "timestamp", type: "text", title:'时间', width: 80, filtering:false},
             ]
         });
