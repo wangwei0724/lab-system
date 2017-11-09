@@ -29,6 +29,16 @@
     <div id="chartContainer"></div>
     <div id="dayContainer"></div>
     <div id="infoContainer"></div>
+    <div class="loadEffect">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
     <script src="public/js/jquery.min.js"></script>
     <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.4.0&key=84ad88afecbe1bf57015c4a7e28064ae"></script> 
     <script src="public/js/echarts.min.js"></script>
@@ -36,6 +46,9 @@
 	    $.ajax({
 	        url:'/lab-system/api/flow.php',
 	        dataType:'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+	        beforeSend: function(){
+	        	$('.loadEffect').show();
+	        },
 	        success:function(data){
 	        	data=data.data;
  				var xAxis_month=[];
@@ -132,6 +145,7 @@
 				        }
 				    ]
 				};
+				$('.loadEffect').hide();
 				var monthChart = echarts.init(document.getElementById('chartContainer'));
 		        monthChart.setOption(option_month); 
 		        var dayChart = echarts.init(document.getElementById('dayContainer'));
