@@ -45,7 +45,9 @@ body{
 .chooseTopic.logo a{
 	font-size: 20px;
 }
-
+.chooseTopic a.active{
+	color: #3385ff;
+}
 #chartContainer{
 	width: 100%;
 	height: 500px;
