@@ -21,121 +21,219 @@
         </div>
     </div>
     <div id="main" style="width: 100%;height:100%;"></div>
-    <!-- <div id="bar" style="width: 20%;min-height: 250px;"></div>
-    <div id="pie" style="width: 20%;min-height: 250px;"></div> -->
-   
     <script src="public/js/jquery.min.js"></script>
     <script src="public/js/my.js"></script>
-    <!-- 引入 ECharts 文件 -->
-<!--     <script src="https://api.map.baidu.com/api?v=2.0&ak=oTpEDdVxMN6Wz7OGB8lk1aUzr958LCz4&s=1;"></script> -->
     <script src="public/js/echarts-all.js"></script>
-   <!--  <script src="public/js/dark.js"></script> -->
-  <!--   <script src="http://gallery.echartsjs.com/dep/echarts/map/js/world.js"></script> 
-    <script src="public/js/extension/bmap.js"></script> -->
    <script>
-    var myChart = echarts.init(document.getElementById('main')); 
-    option = { 
-        backgroundColor: '#080e38',
-        color: [ 
-            '#ff7f50', '#87cefa', '#da70d6', '#32cd32', '#6495ed', 
-            '#ff69b4', '#ba55d3', '#cd5c5c', '#ffa500', '#40e0d0', 
-            '#1e90ff', '#ff6347', '#7b68ee', '#00fa9a', '#ffd700', 
-            '#6b8e23', '#ff00ff', '#3cb371', '#b8860b', '#30e0e0' 
-        ],  
-        tooltip : {
-            //trigger: 'item',
-            enterable:false,
-            formatter: function (params,ticket,callback) {
-                console.log(params)
-                var res = '物理地址:' + params.data.from;
-                res += '<br/>被攻击方：' +  params.data.to;
-                res += '<br/>时间：' +  params.data.time;
-                res += '<br/>攻击类型：' +  params.data.type;
-                if(params.data.from){
-                    return res
-                }else{
-                    return params.name
-                }
-            } 
-        },
-        toolbox: {
-            show : true,
-            orient : 'vertical',
-            x: 'right',
-            y: 'center',
-            feature : {
-                mark : {show: true},
-                dataView : {show: true, readOnly: false},
-                restore : {show: true},
-                saveAsImage : {show: true}
-            }
-        },
-        series : [
-            {
-                name: 'pm2.5',
-                type: 'map',
-                mapType: 'world',
-                hoverable: true,
-                roam:true,
-                data : [],
-                markLine : {
-                    smooth:true,
-                    symbol: ['none', 'circle'],  
-                    symbolSize : 1,
-                    effect : {
-                        show: true,
-                        scaleSize: 1,
-                        period: 30,
-                        color: '#fff',
-                        shadowBlur: 10
-                    },
-                    itemStyle : {
-                        normal: {
-                            borderWidth:2,
-                            lineStyle: {
-                                type: 'solid',
-                                shadowBlur: 10
+
+    setInterval(update,2000);
+    function update(){
+        $.ajax({
+            url:'/lab-system/api/ip.php',
+            dataType:'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+            success:function(data){
+                data=data.data;
+                var details=[]; 
+                var geo={};
+                var from_tos=[];                            
+                for (var i = data.length - 1; i >= 0; i--) {
+                    var detail1={};
+                    var detail2={};
+                    var from_to=[];
+                    //temp1,temp2 for from_to
+                    var temp1={};
+                    var temp2={};
+                    if(data[i].timestamp){
+                        detail1.time=data[i].timestamp;
+                        detail2.time=data[i].timestamp;
+                    };
+                    detail1.type=data[i].sig_class_name;
+                    detail2.type=data[i].sig_class_name;
+                    if (data[i].src.country) {
+                        detail1.from=data[i].src.country;
+                        detail2.from=data[i].src.country;
+                        if (data[i].src.city) {
+                            detail1.from=data[i].src.country+' '+data[i].src.city;
+                            detail2.from=data[i].src.country+' '+data[i].src.city;
+                        }
+                        detail1.name=detail1.from;
+                        temp1.name=detail1.name;
+                        if (data[i].src.latitude&&data[i].src.longitude) {
+                            geo[detail1.from]=[data[i].src.longitude,data[i].src.latitude];
+                        }
+                    }
+                    if (data[i].dst.country) {
+                        detail1.to=data[i].dst.country;
+                        detail2.to=data[i].dst.country;
+                        if (data[i].dst.city) {
+                            detail1.to=data[i].dst.country+' '+data[i].dst.city;
+                            detail2.to=data[i].dst.country+' '+data[i].dst.city;
+                        }
+                        detail2.name=detail1.to;
+                        temp2.name=detail1.to;
+                        if (data[i].dst.latitude&&data[i].dst.longitude) {
+                            geo[detail1.to]=[data[i].dst.longitude,data[i].dst.latitude];
+                        }
+                    }
+                    var arr = Object.keys(detail1);  
+                    if(arr.length==5){
+                        details.push(detail1);
+                        details.push(detail2);
+                        from_to.push(temp1);
+                        from_to.push(temp2);
+                        from_tos.push(from_to);
+                    } 
+                } 
+                console.log(details,from_tos,geo);
+                // });
+                var myChart = echarts.init(document.getElementById('main')); 
+                option = { 
+                    backgroundColor: '#080e38',
+                    color: [ 
+                        '#ff7f50', '#87cefa', '#da70d6', '#32cd32', '#6495ed', 
+                        '#ff69b4', '#ba55d3', '#cd5c5c', '#ffa500', '#40e0d0', 
+                        '#1e90ff', '#ff6347', '#7b68ee', '#00fa9a', '#ffd700', 
+                        '#6b8e23', '#ff00ff', '#3cb371', '#b8860b', '#30e0e0' 
+                    ],
+                      
+                    dataRange: {
+                        min : 0,
+                        max : 100,
+                        calculable : true,
+                        color: ['#ff3333', 'orange', 'yellow','lime','aqua'],
+                        textStyle:{
+                            color:'#fff'
+                        }
+                    },  
+                    tooltip : {
+                        //trigger: 'item',
+                        enterable:false,
+                        formatter: function (params,ticket,callback) {
+                            var res = '物理地址:' + params.data.from;
+                            res += '<br/>被攻击方：' +  params.data.to;
+                            res += '<br/>时间：' +  params.data.time;
+                            res += '<br/>攻击类型：' +  params.data.type;
+                            if(params.data.from){
+                                return res
+                            }else{
+                                return params.name
                             }
+                        } 
+                    },
+                    toolbox: {
+                        show : true,
+                        orient : 'vertical',
+                        x: 'right',
+                        y: 'center',
+                        feature : {
+                            mark : {show: true},
+                            dataView : {show: true, readOnly: false},
+                            restore : {show: true},
+                            saveAsImage : {show: true}
                         }
                     },
-                    data : [
-                        [{name:'1'},{name:'2'}],
-                        [{name:'1'},{name:'3'}],
-                        [{name:'2'},{name:'3'}]
-                    ],
-                },
-                markPoint : {
-                        symbol:'emptyCircle',
-                        symbolSize : function (v){
-                            return 10 + v/10
-                        },
-                        effect : {
-                            show: true,
-                            shadowBlur : 0
-                        },
-                        itemStyle:{
-                            normal:{
-                                label:{show:false}
+                    series : [
+                        {
+                            name: 'pm2.5',
+                            type: 'map',
+                            mapType: 'world',
+                            hoverable: true,
+                            roam:true,
+                            data : [],
+                            markLine : {
+                                smooth:true,
+                                effect : {
+                                    show: true,
+                                    scaleSize: 1,
+                                    period: 30,
+                                    color: '#fff',
+                                    shadowBlur: 10
+                                },
+                                itemStyle : {
+                                    normal: {
+                                        borderWidth:1,
+                                        lineStyle: {
+                                            type: 'solid',
+                                            shadowBlur: 10
+                                        }
+                                    }
+                                },
+                                // data : [
+                                //     [{name:'1'},{name:'2'}],
+                                //     [{name:'1'},{name:'3'}],
+                                //     [{name:'2'},{name:'3'}]
+                                // ],
+                                data : from_tos
                             },
-                            emphasis: {
-                                label:{position:'top'}
-                            }
-                        },
-                            data : [
-                        {name:'1',type: "dos", time: '2017-11-01',from:'柏林',to:'上海'},
-                        {name:'2',type: "dos", time: '2017-11-01',from:'柏林',to:'上海'},
-                        {name:'3',type: "dos", time: '2017-11-01',from:'柏林',to:'上海'}
+                            markPoint : {
+                                    symbol:'emptyCircle',
+                                    symbolSize : function (v){
+                                        return 10 + v/10
+                                    },
+                                    effect : {
+                                        show: true,
+                                        shadowBlur : 0
+                                    },
+                                    itemStyle:{
+                                        normal:{
+                                            label:{show:false}
+                                        },
+                                        emphasis: {
+                                            label:{position:'top'}
+                                        }
+                                    },
+                                            // data : [
+                                    //     {name:'1',type: "dos", time: '2017-11-01',from:'柏林',to:'上海'},
+                                    //     {name:'2',type: "dos", time: '2017-11-01',from:'柏林',to:'上海'},
+                                    //     {name:'3',type: "dos", time: '2017-11-01',from:'柏林',to:'上海'}
+                                    // ]
+                                    data : details
+                            },
+                            // geoCoord: {
+                            //     '1':[101.15,31.89],
+                            //     "2":[121.15,21.89],
+                            //     '3':[141.15,31.89]
+                            // }
+                            geoCoord: geo
+                        }
                     ]
-                },
-                geoCoord: {
-                    '1':[101.15,31.89],
-                    "2":[121.15,21.89],
-                    '3':[141.15,31.89]
-                }
+                }; 
+                myChart.setOption(option); 
             }
-        ]
-    }; 
-    myChart.setOption(option);                  
+        });
+    }
+    var data= [
+
+        {
+            "cid": "35",
+            "timestamp": "2017-11-02 22:06:08",
+            "ip_src": "177.132.105.75",
+            "ip_dst": "177.132.105.75",
+            "sig_class_name": "misc-activity",
+            "src": {
+                "country": "巴西",
+                "city": "庫里奇巴",
+                "ip": "177.132.105.75",
+                "longitude": -49.2667,
+                "latitude": -25.426
+            },
+            "dst": {
+                "country": "越南",
+                "city": null,
+                "ip": "115.73.158.168",
+                "longitude": 106.1946,
+                "latitude": 21.2731
+            }
+        }
+    ];
+    // var detail={name:'1',type: "dos", time: '2017-11-01',from:'柏林',to:'上海'};
+    // var geo={
+    //                 '1':[101.15,31.89],
+    //                 "2":[121.15,21.89],
+    //                 '3':[141.15,31.89]
+    //             }
+    // var ex=[{name:'1'},{name:'2'}] 
+                 
 </script>
 </body>
 </html>
