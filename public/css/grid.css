@@ -27,6 +27,9 @@ body,html {
 	color: #262626;
 	font-size: 16px; 
 }
+.chooseTopic a.active{
+	color: #3385ff;
+}
 .chooseTopic.logo a{
 	font-size: 20px;
 }

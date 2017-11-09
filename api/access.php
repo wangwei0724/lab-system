@@ -8,7 +8,7 @@ require_once 'config.php';
 try{
 
 	$pgIndex = $_GET['pgIndex'] ? $_GET['pgIndex'] :1;
-	$pgSize = $_GET['pgSize'] ? $_GET['pgSize'] : 25;
+	$pgSize = $_GET['pgSize'] ? $_GET['pgSize'] : 15;
 
 	$data = $database->select("access_log", [
 	'time',

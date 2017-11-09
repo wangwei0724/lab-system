@@ -39,7 +39,7 @@ var grid = {
             filtering:false, 
             autoload: true,
             controller: db,
-            pageSize: 20,
+            pageSize: 15,
             pageLoading:true,
 
             fields: [
@@ -61,7 +61,7 @@ var grid = {
             filtering:false, 
             autoload: true,
             controller: db2,
-            pageSize: 20,
+            pageSize: 15,
             pageLoading:true,
 
             fields: [

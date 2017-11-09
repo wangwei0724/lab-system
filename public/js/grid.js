@@ -1,30 +1,28 @@
 var grid = {
     db: {
+        sig_type: [{id:0,name:'all'}],
         loadData: function(filter) {
-                return $.grep(this.attacks, function(data) {
-                    return (filter.sig_class_name=='all' || data.sig_class_name === filter.sig_class_name)
-                });
-            }
-        },
-    init: function() {
-        var self = this;
-        this.getData().then(function(data){
-            self.db.attacks = data.data
-            self.db.sig_type = [{id:0,name:'all'}]
-            var index = 1;
-            for( var i in data.sig_type){
-                self.db.sig_type.push({
-                    id: index++,
-                    name: data.sig_type[i]
-                })
-            }
-            self.initGrid()
-        },function(err) {
-            self.db.attacks = []
-            self.db.sig_type = []
-            self.initGrid()
-        })
-        
+            var self = this;
+            return grid.getData(filter.pageIndex,filter.pageSize, filter.sig_class_name).then(function(data){
+                
+                self.sig_type = [{id:0,name:'all'}]
+                var index = 1;
+                for( var i in data.sig_type){
+                    self.sig_type.push({
+                        id: index++,
+                        name: data.sig_type[i]
+                    })
+                }
+                $("#jsgrid").jsGrid("fieldOption", "sig_class_name", "items", self.sig_type);
+                $('.jsgrid-grid-header select').val(filter.sig_class_name);
+                return {
+                        data: data.data,
+                        itemsCount: data.count
+                    };
+            },function(err) {
+                return []
+            })
+        }
     },
     initGrid: function(){
         var db = this.db;
@@ -35,12 +33,13 @@ var grid = {
 
             inserting: false,
             editing: false,
-            sorting: true,
+            sorting: false,
             paging: true,
             filtering:true, 
             autoload: true,
             controller: db,
             pageSize: 25,
+            pageLoading:true,
 
             fields: [
                 { name: "cid", type: "text", title:'序号', width: 25, filtering:false},   
@@ -53,18 +52,18 @@ var grid = {
             ]
         });
     },
-    getData: function(){
+    getData: function(pgIndex, pgSize, cName){
 
         return new Promise(function(resolve,reject){
             $.ajax({
-                url: '/lab-system/api/attack.php',
+                url: '/lab-system/api/attack.php?pgSize='+pgSize+'&pgIndex='+pgIndex+'&class='+cName,
                 beforeSend: function(){
                     $('.loadEffect').show();
                 },
                 success: function(data){
                     $('.loadEffect').hide();
                     data = JSON.parse(data);
-                    console.log(data)
+                   
                     if(data.status === 0){
                         resolve(data)
                     } else {
@@ -80,4 +79,4 @@ var grid = {
     }
 }
 
-grid.init();
+grid.initGrid();
