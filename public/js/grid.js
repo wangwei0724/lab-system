@@ -57,11 +57,9 @@ var grid = {
         return new Promise(function(resolve,reject){
             $.ajax({
                 url: '/lab-system/api/attack.php?pgSize='+pgSize+'&pgIndex='+pgIndex+'&class='+cName,
-                beforeSend: function(){
-                    $('.loadEffect').show();
-                },
+               
                 success: function(data){
-                    $('.loadEffect').hide();
+                    
                     data = JSON.parse(data);
                    
                     if(data.status === 0){
@@ -71,7 +69,7 @@ var grid = {
                     }
                 },
                 error: function(){
-                    $('.loadEffect').hide();
+                    
                     reject(-1)
                 }
             })
