@@ -40,7 +40,7 @@ var grid = {
             filtering:true, 
             autoload: true,
             controller: db,
-            pgSize: 15,
+            pageSize: 25,
 
             fields: [
                 { name: "cid", type: "text", title:'序号', width: 25, filtering:false},   

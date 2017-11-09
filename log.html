@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>日志统计</title>
+	<link rel="stylesheet" type="text/css" href="public/css/jsgrid.min.css">
+	<link rel="stylesheet" type="text/css" href="public/css/jsgrid-theme.min.css">
+	<link rel="stylesheet" type="text/css" href="public/css/grid.css">
+
+</head>
+<body>
+	<div id="leftBar">
+        <div class="chooseTopic logo" style="width: 200px">
+            <a href="index.html">安全动态感知系统</a>
+        </div>
+    	<div class="chooseTopic">
+    		<a href="index.html">总体态势</a>
+    	</div>
+    	<div class="chooseTopic">
+    		<a href="index1.html">数据列表</a>
+    	</div>
+    	<div class="chooseTopic">
+    		<a href="index2.html">图表</a>
+    	</div>
+        <div class="chooseTopic">
+            <a href="log.html">日志统计</a>
+        </div>
+    </div>
+    <div id='jsBox'>
+        <h3>爆破日志</h3>
+		<div id='jsgrid'></div>
+        <h3>接入日志</h3>
+        <div id='jsgrid2'></div>
+	</div>
+	<div class="loadEffect">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+	</div>
+
+
+	<script type="text/javascript" src="public/js/jquery.min.js"></script>
+	<script type="text/javascript" src="public/js/extension/jsgrid.min.js"></script>
+	<script type="text/javascript" src="public/js/extension/jsgrid_zh.js"></script>
+	<script type="text/javascript" src='public/js/log.js'></script>
+</body>
+</html>

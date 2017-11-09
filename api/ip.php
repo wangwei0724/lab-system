@@ -22,7 +22,8 @@ try{
 	'event.timestamp',
 	'iphdr.ip_src',
 	'iphdr.ip_dst',
-	'sig_class.sig_class_name'
+	'sig_class.sig_class_name',
+	'sig_class.class'
 	],[
 	'ORDER'=>['event.cid'=>'DESC']
 	]);
@@ -50,7 +51,7 @@ try{
 function getLocationByip($ip) {
 	global $reader;
 	$cityArr = array_filter(IP::find($ip));
-
+	
 	if(count($cityArr)){
 		switch ($cityArr[0]) {
 			case '局域网':
@@ -59,15 +60,23 @@ function getLocationByip($ip) {
 			case '保留地址':
 				return ['city'=>'保留地址','ip'=>$ip];
 				break;
+			case 'IPIP.NET':
+				return ['city'=>'','ip'=>$ip];
+				break;
 			default:
 				$record = $reader->city($ip);
-				$res = array(
-					'country' => $record->country->names['zh-CN'],
-					'city' => $record->city->names['zh-CN'],
-					'ip' => $ip,
-					'longitude' => $record->location->longitude,
-					'latitude' => $record->location->latitude);
-				return $res;
+				if($record->city) {
+					$res = array(
+						'country' => $record->country->names['zh-CN'],
+						'city' => $record->city->names['zh-CN'],
+						'ip' => $ip,
+						'longitude' => $record->location->longitude,
+						'latitude' => $record->location->latitude);
+					return $res;
+				} else {
+					return ['city'=>'','ip'=>$ip];
+				}
+				
 		}		
 	}
 
