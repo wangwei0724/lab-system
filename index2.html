@@ -47,8 +47,8 @@
 					yAxis_month.unshift(value);
 				});
 				$.each(data.day,function(key,value){
-					xAxis_day.unshift(key);
-					yAxis_day.unshift(value);
+					xAxis_day.push(key);
+					yAxis_day.push(value);
 				});
 		    	var option_month = {
 				    title : {
